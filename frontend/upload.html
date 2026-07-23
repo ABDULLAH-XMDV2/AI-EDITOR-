@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Edit a video — Reelcut</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+<style>.hidden{display:none !important;}</style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="brand"><span class="brand-mark">R</span>Reelcut</a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="upload.html" class="nav-link">Edit a video</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="app-shell pt-10 md:pt-14 max-w-3xl">
+
+    <p class="eyebrow mb-3">Step 1 of 1</p>
+    <h1 class="display-xl text-3xl md:text-4xl mb-2">Upload a video to auto-edit</h1>
+    <p class="text-muted mb-10">MP4, MOV or AVI, up to 2GB. Processing happens locally after upload.</p>
+
+    <!-- Error alert -->
+    <div id="errorAlert" class="alert alert-error mb-6 hidden">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+      <span id="errorMessage"></span>
+    </div>
+
+    <!-- Dropzone -->
+    <div id="dropzone" class="dropzone mb-4">
+      <input type="file" id="fileInput" accept=".mp4,.mov,.avi,video/mp4,video/quicktime,video/x-msvideo" class="hidden" />
+      <div class="dropzone-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4m0 0L7 9m5-5l5 5M5 20h14"/></svg>
+      </div>
+      <p class="font-medium mb-1">Drag &amp; drop your video here</p>
+      <p class="text-muted text-sm">or click to browse from your device</p>
+    </div>
+
+    <!-- Upload progress -->
+    <div id="uploadProgressWrap" class="glass-card p-5 mb-6 hidden">
+      <div class="flex items-center justify-between mb-2 text-sm">
+        <span id="uploadProgressLabel">Uploading…</span>
+      </div>
+      <div class="progress-track"><div id="uploadProgressFill" class="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <!-- Original preview + options -->
+    <div id="originalPreview" class="glass-card p-5 mb-6 hidden">
+      <div class="flex items-center justify-between mb-3">
+        <span id="selectedFileName" class="font-medium text-sm truncate"></span>
+        <span id="selectedFileSize" class="mono text-xs text-muted"></span>
+      </div>
+      <video id="originalVideo" controls class="w-full rounded-xl bg-black" style="max-height:340px"></video>
+    </div>
+
+    <div id="optionsPanel" class="glass-card p-6 mb-6 hidden">
+      <h3 class="font-semibold mb-4">Editing options</h3>
+
+      <div class="grid sm:grid-cols-2 gap-5">
+        <div>
+          <label class="text-sm text-muted block mb-2">Output aspect ratio</label>
+          <select id="aspectSelect" class="w-full bg-transparent border rounded-lg px-3 py-2 text-sm" style="border-color:var(--border-strong); background:rgba(255,255,255,0.04)">
+            <option value="9:16">9:16 — Vertical / Shorts</option>
+            <option value="1:1">1:1 — Square</option>
+            <option value="16:9">16:9 — Landscape</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-sm text-muted block mb-2">Background music volume</label>
+          <input id="musicVolume" type="range" min="0" max="0.6" step="0.05" value="0.15" class="w-full" />
+        </div>
+
+        <div class="flex items-center gap-3">
+          <input id="subtitlesToggle" type="checkbox" checked class="w-4 h-4" />
+          <label for="subtitlesToggle" class="text-sm">Generate &amp; burn in subtitles</label>
+        </div>
+
+        <div>
+          <label class="text-sm text-muted block mb-2">Background music (optional)</label>
+          <div class="flex items-center gap-3">
+            <button type="button" onclick="document.getElementById('musicInput').click()" class="btn btn-secondary text-xs px-3 py-2">Choose file</button>
+            <span id="musicFileName" class="text-xs text-muted truncate">No file selected</span>
+          </div>
+          <input type="file" id="musicInput" accept="audio/*" class="hidden" />
+        </div>
+      </div>
+
+      <button id="startButton" class="btn btn-primary w-full sm:w-auto mt-6" disabled>Start AI editing</button>
+    </div>
+
+    <!-- Processing panel -->
+    <div id="processingPanel" class="glass-card-strong p-6 mb-6 hidden">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="reel-spinner"></div>
+        <h3 class="font-semibold">AI is editing your video</h3>
+        <span id="overallProgressLabel" class="mono text-sm ml-auto" style="color:var(--accent-secondary)">0%</span>
+      </div>
+      <div class="progress-track mb-5"><div id="overallProgressFill" class="progress-fill" style="width:0%"></div></div>
+      <div id="stepList"></div>
+    </div>
+
+    <!-- Result panel -->
+    <div id="resultPanel" class="glass-card-strong p-6 mb-16 hidden">
+      <h3 class="font-semibold mb-4">Your edit is ready</h3>
+      <video id="resultVideo" controls class="w-full rounded-xl bg-black mb-5" style="max-height:420px"></video>
+
+      <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="stat-card glass-card">
+          <span class="stat-value text-xl" id="resultTime">—</span>
+          <span class="stat-label">Processing time</span>
+        </div>
+        <div class="stat-card glass-card">
+          <span class="stat-value text-xl" id="resultSize">—</span>
+          <span class="stat-label">Output size</span>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <a id="download720Btn" class="btn btn-secondary" download>Download 720p</a>
+        <a id="download1080Btn" class="btn btn-primary" download>Download 1080p</a>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="js/main.js"></script>
+  <script src="js/upload.js"></script>
+</body>
+</html>

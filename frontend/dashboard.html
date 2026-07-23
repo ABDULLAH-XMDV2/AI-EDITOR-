@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — Reelcut</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+<style>.hidden{display:none !important;}</style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="brand"><span class="brand-mark">R</span>Reelcut</a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="upload.html" class="nav-link">Edit a video</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="app-shell pt-10 md:pt-14">
+
+    <p class="eyebrow mb-3">Live</p>
+    <h1 class="display-xl text-3xl md:text-4xl mb-2">Processing dashboard</h1>
+    <p class="text-muted mb-10">Refreshes automatically every few seconds.</p>
+
+    <!-- Stat cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
+      <div class="glass-card stat-card">
+        <span class="stat-value" id="statTotalVideos">0</span>
+        <span class="stat-label">Total videos</span>
+      </div>
+      <div class="glass-card stat-card">
+        <span class="stat-value" id="statQueue" style="color:var(--accent-primary)">0</span>
+        <span class="stat-label">In queue / processing</span>
+      </div>
+      <div class="glass-card stat-card">
+        <span class="stat-value" id="statCompleted" style="color:var(--accent-secondary)">0</span>
+        <span class="stat-label">Completed edits</span>
+      </div>
+      <div class="glass-card stat-card">
+        <span class="stat-value" id="statFailed" style="color:var(--accent-warn)">0</span>
+        <span class="stat-label">Failed jobs</span>
+      </div>
+      <div class="glass-card stat-card">
+        <span class="stat-value" id="statStorage">0 MB</span>
+        <span class="stat-label">Storage used</span>
+      </div>
+    </div>
+
+    <!-- Jobs table -->
+    <div class="glass-card p-2 mb-16">
+      <div class="overflow-x-auto">
+        <table class="jobs-table">
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Status</th>
+              <th>Current step</th>
+              <th>Size</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody id="jobsTableBody"></tbody>
+        </table>
+      </div>
+      <div id="emptyState" class="text-center py-16 text-muted hidden">
+        <p class="mb-3">No videos uploaded yet.</p>
+        <a href="upload.html" class="btn btn-primary">Upload your first video</a>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="js/main.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
