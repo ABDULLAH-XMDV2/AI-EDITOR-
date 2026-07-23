@@ -1,1 +1,545 @@
+/*
+  style.css
+  Design system for the AI Auto Video Editor UI.
+  Tokens: near-black void background, violet + teal dual accent, a
+  geometric display face (Space Grotesk) paired with Inter for body copy
+  and IBM Plex Mono for timestamps/data. The signature motif is a
+  segmented "scene timeline" bar used in the hero, the processing view
+  and the dashboard sparkline, echoing the app's own scene-detection core.
+*/
+
+:root {
+  --bg-void: #08090d;
+  --bg-panel: rgba(255, 255, 255, 0.045);
+  --bg-panel-strong: rgba(255, 255, 255, 0.07);
+  --border-soft: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  --accent-primary: #6e5bff;
+  --accent-primary-soft: rgba(110, 91, 255, 0.18);
+  --accent-secondary: #22d3b8;
+  --accent-secondary-soft: rgba(34, 211, 184, 0.16);
+  --accent-warn: #ff6b5b;
+  --accent-warn-soft: rgba(255, 107, 91, 0.16);
+
+  --text-primary: #f4f4f8;
+  --text-muted: #90929f;
+  --text-faint: #5c5e6b;
+
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --radius-sm: 9px;
+
+  --font-display: "Space Grotesk", "Inter", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at 15% 0%, #14121f 0%, var(--bg-void) 45%) fixed;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Layout shells                                                          */
+/* ---------------------------------------------------------------------- */
+
+.app-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  backdrop-filter: blur(18px);
+  background: rgba(8, 9, 13, 0.72);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.navbar-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.brand-mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #08090d;
+}
+
+.nav-links {
+  display: flex;
+  gap: 6px;
+}
+
+.nav-link {
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.nav-link:hover {
+  color: var(--text-primary);
+  background: var(--bg-panel);
+}
+
+.nav-link.active {
+  color: var(--text-primary);
+  background: var(--bg-panel-strong);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Glass cards                                                            */
+/* ---------------------------------------------------------------------- */
+
+.glass-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.glass-card-strong {
+  background: var(--bg-panel-strong);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(24px);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Hero / typography                                                      */
+/* ---------------------------------------------------------------------- */
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-secondary);
+}
+
+.display-xl {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  color: var(--text-primary);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Signature element: segmented scene timeline                           */
+/* ---------------------------------------------------------------------- */
+
+.scene-timeline {
+  display: flex;
+  gap: 3px;
+  height: 34px;
+  width: 100%;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  padding: 3px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-soft);
+}
+
+.scene-timeline .segment {
+  flex: 1;
+  border-radius: 4px;
+  background: linear-gradient(180deg, rgba(110, 91, 255, 0.35), rgba(110, 91, 255, 0.12));
+  position: relative;
+  overflow: hidden;
+}
+
+.scene-timeline .segment::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  transform: translateX(-100%);
+  animation: scan-sweep 3.2s ease-in-out infinite;
+}
+
+.scene-timeline .segment:nth-child(3n + 1)::after {
+  animation-delay: 0.4s;
+}
+
+.scene-timeline .segment:nth-child(3n + 2)::after {
+  animation-delay: 0.9s;
+}
+
+@keyframes scan-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Buttons                                                                */
+/* ---------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  text-decoration: none;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent-secondary);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-primary), #8f7bff);
+  color: white;
+  box-shadow: 0 8px 24px rgba(110, 91, 255, 0.28);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(110, 91, 255, 0.38);
+}
+
+.btn-secondary {
+  background: var(--bg-panel-strong);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.11);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Upload dropzone                                                       */
+/* ---------------------------------------------------------------------- */
+
+.dropzone {
+  border: 1.5px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: 56px 24px;
+  text-align: center;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  cursor: pointer;
+}
+
+.dropzone.drag-active {
+  border-color: var(--accent-primary);
+  background: var(--accent-primary-soft);
+}
+
+.dropzone-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 18px;
+  border-radius: 16px;
+  background: var(--accent-primary-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-primary);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Progress bar                                                          */
+/* ---------------------------------------------------------------------- */
+
+.progress-track {
+  width: 100%;
+  height: 10px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Pipeline step list                                                    */
+/* ---------------------------------------------------------------------- */
+
+.step-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 0;
+  font-size: 13.5px;
+  color: var(--text-faint);
+  transition: color 0.25s ease;
+}
+
+.step-row.active {
+  color: var(--text-primary);
+}
+
+.step-row.done {
+  color: var(--accent-secondary);
+}
+
+.step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-faint);
+  flex-shrink: 0;
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.step-row.active .step-dot {
+  background: var(--accent-primary);
+  box-shadow: 0 0 0 4px var(--accent-primary-soft);
+  animation: pulse-dot 1.2s ease-in-out infinite;
+}
+
+.step-row.done .step-dot {
+  background: var(--accent-secondary);
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    box-shadow: 0 0 0 4px var(--accent-primary-soft);
+  }
+  50% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Stat cards                                                            */
+/* ---------------------------------------------------------------------- */
+
+.stat-card {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Status badges                                                         */
+/* ---------------------------------------------------------------------- */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.badge-completed {
+  background: var(--accent-secondary-soft);
+  color: var(--accent-secondary);
+}
+
+.badge-processing {
+  background: var(--accent-primary-soft);
+  color: #b3a5ff;
+}
+
+.badge-queued {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+}
+
+.badge-failed {
+  background: var(--accent-warn-soft);
+  color: var(--accent-warn);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Table                                                                  */
+/* ---------------------------------------------------------------------- */
+
+.jobs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.jobs-table th {
+  text-align: left;
+  color: var(--text-faint);
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.jobs-table td {
+  padding: 13px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+  color: var(--text-primary);
+}
+
+.jobs-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Loading spinner (film-reel inspired)                                   */
+/* ---------------------------------------------------------------------- */
+
+.reel-spinner {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(255, 255, 255, 0.15);
+  border-top-color: var(--accent-primary);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Toast / inline alerts                                                  */
+/* ---------------------------------------------------------------------- */
+
+.alert {
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  font-size: 13.5px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.alert-error {
+  background: var(--accent-warn-soft);
+  color: #ffcac2;
+  border: 1px solid rgba(255, 107, 91, 0.35);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Fade-in utility                                                       */
+/* ---------------------------------------------------------------------- */
+
+.fade-in {
+  animation: fade-in-up 0.5s ease both;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Responsive helpers                                                    */
+/* ---------------------------------------------------------------------- */
+
+@media (max-width: 720px) {
+  .display-xl {
+    font-size: 34px !important;
+  }
+}
 
