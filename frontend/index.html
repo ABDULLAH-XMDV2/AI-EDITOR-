@@ -1,1 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Reelcut — MADE FOR AHMAD</title>
+<meta name="description" content="Upload a video and let local AI cut, crop, stabilize and subtitle it automatically." />
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
 
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">R</span>
+        Reelcut
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="upload.html" class="nav-link">Edit a video</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="app-shell">
+
+    <!-- Hero -->
+    <section class="pt-16 pb-10 md:pt-24 md:pb-14">
+      <p class="eyebrow mb-4">Local AI · No cloud · No paid APIs</p>
+      <h1 class="display-xl text-4xl md:text-6xl max-w-3xl">
+        Drop a clip in. Get a finished edit out.
+      </h1>
+      <p class="text-muted text-base md:text-lg max-w-xl mt-5 leading-relaxed">
+        Reelcut runs scene detection, silence removal, face-aware cropping, color
+        correction, stabilization and subtitle generation entirely on your own
+        machine — then hands you back a 720p and 1080p export.
+      </p>
+
+      <div class="flex flex-wrap gap-3 mt-8">
+        <a href="upload.html" class="btn btn-primary">Upload your first video</a>
+        <a href="dashboard.html" class="btn btn-secondary">View dashboard</a>
+      </div>
+
+      <!-- Signature element: segmented scene timeline echoing the app's own scene-cut engine -->
+      <div class="mt-14 max-w-2xl">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs mono text-faint" style="color:var(--text-faint)">scene_timeline.mp4</span>
+          <span class="text-xs mono" style="color:var(--accent-secondary)">14 cuts detected</span>
+        </div>
+        <div class="scene-timeline" id="heroTimeline"></div>
+      </div>
+    </section>
+
+    <!-- Pipeline steps -->
+    <section class="py-12 md:py-16">
+      <h2 class="display-xl text-2xl md:text-3xl mb-2">One upload, seventeen automatic steps</h2>
+      <p class="text-muted mb-10 max-w-2xl">Every stage runs locally with FFmpeg, OpenCV, MediaPipe, PySceneDetect and Whisper — nothing leaves your server.</p>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        <div class="glass-card p-6">
+          <div class="dropzone-icon mb-4">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7l8-4 8 4M4 7v10l8 4m-8-14l8 4m0 10l8-4V7m-8 14V11"/></svg>
+          </div>
+          <h3 class="font-semibold mb-1.5">Scene &amp; silence aware</h3>
+          <p class="text-sm text-muted leading-relaxed">PySceneDetect finds every cut; ffmpeg's silence detector trims dead air automatically.</p>
+        </div>
+
+        <div class="glass-card p-6">
+          <div class="dropzone-icon mb-4">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/></svg>
+          </div>
+          <h3 class="font-semibold mb-1.5">Face-aware reframing</h3>
+          <p class="text-sm text-muted leading-relaxed">MediaPipe tracks faces so auto-crop and auto-zoom keep the subject centered.</p>
+        </div>
+
+        <div class="glass-card p-6">
+          <div class="dropzone-icon mb-4">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v3m0 12v3m9-9h-3M6 12H3m14.4-6.4l-2.1 2.1M8.7 15.3l-2.1 2.1m0-10.8l2.1 2.1m8.4 8.4l-2.1-2.1"/></svg>
+          </div>
+          <h3 class="font-semibold mb-1.5">Color, sharpness &amp; noise</h3>
+          <p class="text-sm text-muted leading-relaxed">Auto brightness, saturation, denoise and sharpening tuned per-clip from sampled frames.</p>
+        </div>
+
+        <div class="glass-card p-6">
+          <div class="dropzone-icon mb-4">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12a8 8 0 0114-5.3M20 12a8 8 0 01-14 5.3M4 6.5v3h3M20 17.5v-3h-3"/></svg>
+          </div>
+          <h3 class="font-semibold mb-1.5">Stabilization</h3>
+          <p class="text-sm text-muted leading-relaxed">Two-pass vidstab analysis smooths handheld shake without cropping too aggressively.</p>
+        </div>
+
+        <div class="glass-card p-6">
+          <div class="dropzone-icon mb-4">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13M9 9l12-2M6 21a3 3 0 100-6 3 3 0 000 6zm12-2a3 3 0 100-6 3 3 0 000 6z"/></svg>
+          </div>
+          <h3 class="font-semibold mb-1.5">Loudness &amp; music</h3>
+          <p class="text-sm text-muted leading-relaxed">EBU R128 loudness normalization plus an optional ducked background music mix.</p>
+        </div>
+
+        <div class="glass-card p-6">
+          <div class="dropzone-icon mb-4">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v10H8l-4 4V5z"/></svg>
+          </div>
+          <h3 class="font-semibold mb-1.5">Subtitles, burned in</h3>
+          <p class="text-sm text-muted leading-relaxed">Local Whisper transcribes speech and the SRT is hard-burned into the export.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-10">
+      <div class="glass-card-strong p-10 text-center">
+        <h2 class="display-xl text-2xl md:text-3xl mb-3">Ready to edit your first clip?</h2>
+        <p class="text-muted mb-6 max-w-lg mx-auto">Drag in an MP4, MOV or AVI file and Reelcut takes it from there.</p>
+        <a href="upload.html" class="btn btn-primary">Start editing</a>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="js/main.js"></script>
+  <script>
+    // Populate the hero's decorative scene-timeline with a fixed set of
+    // segments purely for visual rhythm on the landing page.
+    const heroTimeline = document.getElementById('heroTimeline');
+    for (let i = 0; i < 26; i++) {
+      const seg = document.createElement('div');
+      seg.className = 'segment';
+      heroTimeline.appendChild(seg);
+    }
+  </script>
+</body>
+</html>
